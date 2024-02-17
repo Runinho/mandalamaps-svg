@@ -1,0 +1,90 @@
+{
+  "0924d404-049a-4d3a-a312-966db5d04313": {
+    "id": "0924d404-049a-4d3a-a312-966db5d04313",
+    "name": "grass",
+    "fill": true,
+    "color": "#008009",
+    "stroke": "#ffffff",
+    "width": "0",
+    "enabled": {
+      "landuse": [
+        "grass"
+      ],
+      "leisure": [
+        "outdoor_seating",
+        "playground",
+        "park"
+      ]
+    }
+  },
+  "86fec3f3-dac4-460d-bdcb-793d1d6b631c": {
+    "id": "86fec3f3-dac4-460d-bdcb-793d1d6b631c",
+    "name": "housing",
+    "fill": true,
+    "color": "#d90202",
+    "stroke": "#070707",
+    "width": 1,
+    "enabled": {
+      "building": [
+        "yes",
+        "apartments",
+        "house",
+        "residential",
+        "retail",
+        "commercial",
+        "warehouse",
+        "hotel",
+        "roof",
+        "industrial",
+        "school"
+      ]
+    }
+  },
+  "76c4e439-b3e2-461b-b012-211649c070ef": {
+    "id": "76c4e439-b3e2-461b-b012-211649c070ef",
+    "name": "cyclway",
+    "fill": false,
+    "color": "#000000",
+    "stroke": "#0c64b6",
+    "width": 1,
+    "enabled": {
+      "highway": [
+        "cycleway"
+      ],
+      "landuse": [],
+      "leisure": []
+    }
+  },
+  "052c319b-e0a6-47fa-8a12-1a448b459fa5": {
+    "id": "052c319b-e0a6-47fa-8a12-1a448b459fa5",
+    "name": "footway",
+    "fill": false,
+    "color": "#919191",
+    "stroke": "#707070",
+    "width": "0.5",
+    "enabled": {
+      "highway": [
+        "footway"
+      ]
+    }
+  },
+  "4e1e698c-78b1-4534-8352-5d999c2dd60a": {
+    "id": "4e1e698c-78b1-4534-8352-5d999c2dd60a",
+    "name": "streets",
+    "fill": false,
+    "color": "#000000",
+    "stroke": "#070707",
+    "width": 1,
+    "enabled": {
+      "highway": [
+        "service",
+        "tertiary",
+        "secondary",
+        "residential",
+        "path",
+        "tertiary_link",
+        "steps"
+      ]
+    }
+  }
+}

@@ -1,9 +1,31 @@
 import styles from "./page.module.css";
+import {LayerStyle} from "@/app/layerStyle";
+import {FunctionComponent} from "react";
+import {LayerSelector} from "@/app/layerSelector";
+import {TagCount} from "@/app/mapData";
 
-export function LayerConfig({config, layerName, setConfig}) {
+export type PropsLayerConfig = {
+  layer: LayerStyle,
+  setConfig: (old: LayerStyle) => LayerStyle,
+  tagCounts: TagCount;
+};
+
+export const LayerConfig: FunctionComponent<PropsLayerConfig> = ({layer, setConfig, tagCounts}) => {
 
   // propagate change upwards to correct value
-  const onChangeHandler = (configName) => {
+
+  const setEnabled = (enabledCb) => {
+    // on change event handler
+    setConfig((oldConfig) => {
+      // on change of the config
+      const newConfig = {...oldConfig}
+      // change only the `configName` value.
+      newConfig.enabled = enabledCb(newConfig.enabled); // call the callback with the old value.
+      return newConfig;
+    })
+  }
+
+  const onChangeHandler = (configName: string) => {
     return (e) => {
       // on change event handler
       setConfig((oldConfig) => {
@@ -17,7 +39,7 @@ export function LayerConfig({config, layerName, setConfig}) {
   }
 
   // change handler for checkbox :'(
-  const onChangeHandlerCheckbox = (configName) => {
+  const onChangeHandlerCheckbox = (configName: string) => {
     return (e) => {
       // on change event handler
       setConfig((oldConfig) => {
@@ -31,26 +53,31 @@ export function LayerConfig({config, layerName, setConfig}) {
   }
 
   return <div className="LayerConfig">
-    <div className={styles.LayerName}>{layerName}</div>
+    <div className={styles.LayerName}>
+      <input value={layer.name}
+             onChange={onChangeHandler("name")}/>
+    </div>
     <div>
-      <input value={config.width}
+      <input value={layer.width}
              onChange={onChangeHandler("width")}/>
     </div>
     <div>
       <input type="checkbox"
-             value={config.fill}
+             checked={layer.fill}
              onChange={onChangeHandlerCheckbox("fill")}
       />
       <input type="color"
-             value={config.color}
+             value={layer.color}
              onChange={onChangeHandler("color")}
       />
     </div>
 
     <input type="color"
-           value={config.stroke}
+           value={layer.stroke}
            onChange={onChangeHandler("stroke")}
     />
-    {Object.keys(config).map((name) => <div key={name}>{name}: {config[name]}</div>)}
+
+    <LayerSelector enabled={layer.enabled} setEnabled={setEnabled} tagCounts={tagCounts}></LayerSelector>
+    {Object.keys(layer).map((name) => <div key={name}>{name}: {JSON.stringify(layer[name])}</div>)}
   </div>
 }
