@@ -16,6 +16,12 @@ export class MappedNode{
     this.lat = lat;
     this.lon = lon;
   }
+
+  minus(other: MappedNode) {
+    this.lat -= other.lat
+    this.lon -= other.lon
+    return this
+  }
 }
 
 export class Way{

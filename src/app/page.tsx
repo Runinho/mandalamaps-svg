@@ -7,6 +7,7 @@ import {Layer} from "@/app/layer";
 import {MappedNode, OSMElement, ResolvedWays, TagCount, TaggedWays, Way, Ways} from "@/app/mapData";
 import {DefaultDict} from "@/app/defaultdict";
 import {LayerStyle} from "@/app/layerStyle";
+import {mercator} from "@/overpass/projection";
 
 interface Position {
   lat: number;
@@ -40,12 +41,14 @@ function resolve_refs(data: { data: {elements: OSMElement[]}; offset: { lon: num
   let tagCount:TagCount = new DefaultDict(() => new DefaultDict<number>(() => 0));
 
   const elements: OSMElement[] =  data["data"]["elements"]
+  const zoomLevel = 18//25.256 // log2(40.000.000) (circumfrence earth)
+  const projectedOffset = mercator(offset, zoomLevel)
   for (const elm of elements) {
     if (elm["type"] === "node") {
       // might want to map coords here
       // might convert this to the coordstream we also need to render in svg?
-      node[elm["id"]] = new MappedNode((elm["lat"] - offset["lat"]) * scale,
-                                       (elm["lon"] - offset["lon"]) * scale);
+      const mapped = mercator(elm, zoomLevel)
+      node[elm["id"]] = mapped.minus(projectedOffset);
     }
     if (elm["type"] === "way") {
       if (elm["tags"]) {
@@ -74,6 +77,15 @@ export default function Home() {
   // array of the layers.
   const [layerStyles, setLayerStyles] = useState<{[id: string]:LayerStyle}>({})
 
+  // load style from local storage
+  useEffect(() => {
+    const storedStyle = localStorage.getItem("style")
+    if(storedStyle != null){
+      setLayerStyles(JSON.parse(storedStyle))
+    }
+  }, []);
+
+  // load map data
   useEffect(() => {
     setLoading("downloading data")
     load_overpass_data()
@@ -97,6 +109,10 @@ export default function Home() {
       return newLayer;
     });
   };
+
+  const saveStyle = () => {
+    localStorage.setItem("style", JSON.stringify(layerStyles))
+  }
 
   let layerConfigs = [];
   if(data != null){
@@ -127,7 +143,7 @@ export default function Home() {
           {isLoading !== "done" && <div>loading: {isLoading}</div>}
           <svg viewBox="0 0 500 500" id="emoji" xmlns="http://www.w3.org/2000/svg" fill="#000000" width="100%">
             {data != null &&
-            <g transform="translate(0, 400) scale(1,-1)">
+            <g transform="translate(0, 250)">
               {Object.keys(layerStyles).map((layerId) => {
                 // TODO: fix ordering (now it is after insertion of the dict. Is this persistent enough??
                 const style = layerStyles[layerId];
@@ -172,6 +188,9 @@ export default function Home() {
           {layerConfigs}
           <div>
             <button onClick={addLayer}>Add Layer</button>
+          </div>
+          <div>
+            <button onClick={saveStyle}>Save style</button>
           </div>
         </div>
       </div>

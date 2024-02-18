@@ -1,19 +1,26 @@
 .MapConfigurator{
   display: flex;
+  max-height: 100vh;
 }
 
 .MapStyleConfig{
   width: 300px;
   background-color: white;
   padding: 16px;
+  overflow-y: scroll;
 }
 
 .Map{
   width:100%;
-
+  overflow: hidden;
 }
 
 .LayerName{
   margin-top: 8px;
   font-size: 24px;
+}
+
+.main{
+  color: black;
+  max-height: 100vh;
 }
