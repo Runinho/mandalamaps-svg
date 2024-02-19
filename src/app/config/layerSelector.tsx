@@ -1,13 +1,13 @@
 import {FunctionComponent} from "react";
-import {TagCount} from "@/app/mapData";
-import styles from "./page.module.css";
+import {TagCount, TagCountCounter} from "@/app/map/mapData";
+import styles from "../page.module.css";
 import {LayerStyleEnabled} from "@/app/layerStyle";
 import {list} from "postcss";
 
 export type PropsLayerSelector = {
   enabled: LayerStyleEnabled,
   setEnabled: (oldEnabled: LayerStyleEnabled) => LayerStyleEnabled,
-  tagCounts: TagCount,
+  tagCounts: TagCountCounter,
 };
 
 export const LayerSelector : FunctionComponent<PropsLayerSelector> = ({enabled, tagCounts, setEnabled}) => {

@@ -1,4 +1,4 @@
-import {TaggedWays, Way, Ways} from "@/app/mapData";
+import {TaggedWays, Way, Ways} from "@/app/map/mapData";
 import React, {FunctionComponent} from "react";
 import {LayerStyle} from "@/app/layerStyle";
 

@@ -25,4 +25,10 @@ export class DefaultDict<T> {
   keys(): string[] {
     return Object.keys(this._data);
   }
+
+  clone() {
+    const n = new DefaultDict<T>(this._defaultFactory)
+    n._data = {...this._data};
+    return n;
+  }
 }

@@ -15,11 +15,6 @@
   overflow: hidden;
 }
 
-.LayerName{
-  margin-top: 8px;
-  font-size: 24px;
-}
-
 .main{
   color: black;
   max-height: 100vh;

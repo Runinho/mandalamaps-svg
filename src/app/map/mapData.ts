@@ -1,8 +1,62 @@
-
-// used internally
 import {DefaultDict} from "@/app/defaultdict";
+import {TileId} from "@/app/map/tileId";
+import {v4 as uuidv4} from 'uuid';
 
-export type TagCount = DefaultDict<DefaultDict<number>>;
+export type TagCountCounter = DefaultDict<DefaultDict<number>>;
+export function CreateTagCountCounter(){
+  return new DefaultDict(() => new DefaultDict<number>(() => 0));
+}
+
+export class TagCount {
+  id: string;
+  all: TagCountCounter
+  byId: {[id: string]: TagCountCounter}
+
+  constructor() {
+    this.id = uuidv4();
+    this.all = CreateTagCountCounter();
+    this.byId = {}
+  }
+
+  update(tileId: TileId, counter: TagCountCounter){
+    if (tileId.asString() in this.byId){
+      console.log("subtracting")
+      // subtract counts first
+      this.minus(this.byId[tileId.asString()])
+    }
+    this.add(counter)
+    this.byId[tileId.asString()] = counter
+  }
+
+  private add(other: TagCountCounter){
+    for(const key of other.keys()){
+      for(const value of other.get(key).keys()){
+        const oldValue = this.all.get(key).get(value)
+        const toAdd = other.get(key).get(value)
+        this.all.get(key).set(value, oldValue + toAdd)
+      }
+    }
+  }
+
+  private minus(other: TagCountCounter){
+    for(const key of other.keys()){
+      for(const value of other.get(key).keys()){
+        const oldValue = this.all.get(key).get(value)
+        const toSubtract = other.get(key).get(value)
+        this.all.get(key).set(value, oldValue - toSubtract)
+      }
+    }
+  }
+
+  public clone(){
+    const n = new TagCount()
+    n.all = this.all.clone();
+    n.byId = this.byId;
+    return n;
+  }
+
+}
+
 
 type Tags = {
   [key: string]: string;
@@ -22,6 +76,17 @@ export class MappedNode{
     this.lon -= other.lon
     return this
   }
+
+  plus(other: MappedNode) {
+    this.lat += other.lat
+    this.lon += other.lon
+    return this
+  }
+
+  clone() {
+    return new MappedNode(this.lat, this.lon)
+  }
+
 }
 
 export class Way{
